@@ -1,8 +1,10 @@
 
 const express = require("express");
-const { Products } = require("../model");
+const { Products, Cart } = require("../model/model");
+const { auth } = require("../middlewares/auth.middleware");
 
 const axisRouter = express.Router();
+
 
 axisRouter.post("/products", async (req, res) => {
   try {
@@ -22,6 +24,31 @@ axisRouter.post("/products", async (req, res) => {
 axisRouter.get("/products", async (req, res) => {
   try {
     const products = await Products.find();
+    res.status(200).json({ msg: products });
+  } catch (err) {
+    res.status(404).json({ msg: err.message });
+  }
+});
+
+axisRouter.post("/cart", async (req, res) => {
+  const products= req.body; // Assuming req.body is an array of products
+
+  try {
+    console.log(products);
+    const insertedProducts = new Cart(products);
+    const savedProduct = await insertedProducts.save();
+    res.json({
+      message: "Product added to Cart successfully",
+      data: savedProduct,
+    });
+  } catch (error) {
+    res.status(404).json({ message: "Error adding products", error: error.message });
+  }
+});
+
+axisRouter.get("/cart", async (req, res) => {
+  try {
+    const products = await Cart.find();
     res.status(200).json({ msg: products });
   } catch (err) {
     res.status(404).json({ msg: err.message });
