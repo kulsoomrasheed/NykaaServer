@@ -17,4 +17,6 @@ const dataSchema = new mongoose.Schema({
   
   const Cart = mongoose.model('cart', dataSchema);
 
-  module.exports = {Products,Cart}
+  const Wishlist = mongoose.model('wishlist', dataSchema);
+
+  module.exports = {Products,Cart,Wishlist}
